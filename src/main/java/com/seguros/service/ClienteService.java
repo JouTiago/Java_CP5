@@ -16,6 +16,11 @@ public class ClienteService {
             throw new IllegalArgumentException("A senha deve conter pelo menos 8 caracteres.");
         }
 
+        //Validar email
+        if (!cliente.validarEmail()) {
+            throw new IllegalArgumentException("Email inválido.");
+        }
+
         //Regra de negócio: Verificar se o cliente já está cadastrado pelo CPF
         if (clienteDao.verificarLogin(cliente.getEmail(), cliente.getSenha())) {
             throw new IllegalArgumentException("Cliente já cadastrado com esse CPF.");
@@ -30,4 +35,22 @@ public class ClienteService {
     public boolean realizarLogin(String email, String senha) {
         return clienteDao.verificarLogin(email, senha);
     }
+
+
+    //Alterar a senha
+    public boolean alterarSenha(Cliente cliente, String senhaAtual, String novaSenha) {
+        if (cliente.alterarSenha(senhaAtual, novaSenha)) {
+            return clienteDao.atualizarCliente(cliente);
+        }
+        throw new IllegalArgumentException("Senha atual incorreta ou nova senha inválida.");
+    }
+
+    //Alterar o email
+    public boolean alterarEmail(Cliente cliente, String novoEmail) {
+        if (cliente.alterarEmail(novoEmail)) {
+            return clienteDao.atualizarCliente(cliente);
+        }
+        throw new IllegalArgumentException("Email inválido.");
+    }
+
 }

@@ -21,4 +21,15 @@ public class ClienteDao {
     public boolean verificarLogin(String email, String senha) {
         return OperacoesSql.verificaLogin(TABELA, email, senha);
     }
+
+    //Atualizar os dados do cliente no banco
+    public boolean atualizarCliente(Cliente cliente) {
+        String[] colunasAtualizar = {"c_email", "c_senha"};
+        Object[] valoresAtualizar = {cliente.getEmail(), cliente.getSenha()};
+
+        String condicao = "c_cpf = ?";
+        Object[] parametrosCondicao = {cliente.getCpf()};
+
+        return OperacoesSql.executarUpdate(TABELA, colunasAtualizar, valoresAtualizar, condicao, parametrosCondicao);
+    }
 }

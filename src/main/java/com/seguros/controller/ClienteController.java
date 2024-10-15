@@ -48,4 +48,52 @@ public class ClienteController {
         }
     }
 
+    // Endpoint para alterar o email
+    @PUT
+    @Path("/alterar-email")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response alterarEmail(
+            @FormParam("cpf") String cpf,
+            @FormParam("novoEmail") String novoEmail
+    ) {
+        try {
+            Cliente cliente = new Cliente(cpf, novoEmail, null);
+            boolean sucesso = clienteService.alterarEmail(cliente, novoEmail);
+
+            if (sucesso) {
+                return Response.ok("Email alterado com sucesso").build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao alterar o email").build();
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
+
+    // Endpoint para alterar a senha
+    @PUT
+    @Path("/alterar-senha")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response alterarSenha(
+            @FormParam("cpf") String cpf,
+            @FormParam("senhaAtual") String senhaAtual,
+            @FormParam("novaSenha") String novaSenha
+    ) {
+        try {
+            Cliente cliente = new Cliente(cpf, null, senhaAtual);
+            boolean sucesso = clienteService.alterarSenha(cliente, senhaAtual, novaSenha);
+
+            if (sucesso) {
+                return Response.ok("Senha alterada com sucesso").build();
+            } else {
+                return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao alterar a senha").build();
+            }
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+        }
+    }
+
 }
