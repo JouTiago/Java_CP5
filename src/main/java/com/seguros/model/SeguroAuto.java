@@ -2,6 +2,8 @@ package com.seguros.model;
 
 import java.time.LocalDate;
 
+//Classe anemica
+
 public class SeguroAuto {
     private long id;
     private Cliente cliente;
@@ -20,7 +22,6 @@ public class SeguroAuto {
         this.dataInicio = dataInicio;
         this.dataFim = dataFim;
         this.sinistroGrave = sinistroGrave;
-        this.premio = calcularPremio();
     }
 
 
@@ -74,17 +75,4 @@ public class SeguroAuto {
         this.sinistroGrave = sinistroGrave;
     }
 
-
-    //Métodos
-
-    //Calcular o prêmio do seguro do carro
-    public double calcularPremio() {
-        double valorVeiculo = veiculo.getAno() * 1000;
-        return valorVeiculo * 0.05;
-    }
-
-    //Ver se o cliente é elegível para o seguro
-    public boolean verificarElegibilidade() {
-        return cliente !=null && veiculo !=null && veiculo.validarCnh() && !sinistroGrave;
-    }
 }
