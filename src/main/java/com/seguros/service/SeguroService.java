@@ -1,6 +1,7 @@
 package com.seguros.service;
 
 import com.seguros.dao.SeguroDao;
+import com.seguros.factory.SeguroAutoFactory;
 import com.seguros.dao.SinistroDao;
 import com.seguros.model.Cliente;
 import com.seguros.model.SeguroAuto;
@@ -10,7 +11,6 @@ import com.seguros.util.OperacoesSql;
 
 import java.time.LocalDate;
 import java.util.List;
-
 
 public class SeguroService {
     private final SeguroDao seguroDao = new SeguroDao();
@@ -22,9 +22,12 @@ public class SeguroService {
     //Contratar o seguro
     public boolean contratarSeguroAuto(Cliente cliente, Veiculo veiculo, LocalDate dataInicio, LocalDate dataFim) {
 
+
         // Gerar novo ID para o seguro, associado a um cliente e a um veiculo
         int novoId = OperacoesSql.gerarNovoId("T_SEGURO_AUTO", "id");
-        SeguroAuto seguroAuto = new SeguroAuto(novoId, cliente, veiculo, dataInicio, dataFim, false);
+
+        SeguroAutoFactory seguroAutoFactory = new SeguroAutoFactory(novoId, cliente, veiculo, dataInicio, dataFim);
+        SeguroAuto seguroAuto = seguroAutoFactory.criar();
 
 
         //Verifica a elegibilidade do cliente
