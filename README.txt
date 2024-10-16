@@ -1,3 +1,5 @@
+Código de insert utilizado para gerar as tabelas para o banco de dados
+
 CREATE TABLE T_CLIENTE (
     c_cpf VARCHAR2(11) PRIMARY KEY,
     c_email VARCHAR2(255) NOT NULL, 
