@@ -16,11 +16,14 @@ public class ClienteController {
     @Path("/cadastrar")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response cadastrarCliente(Cliente cliente) {
+    public Response cadastrarCliente(
+            @FormParam("cpf") String cpf,
+            @FormParam("email") String email,
+            @FormParam("senha") String senha) {
         try {
-            boolean sucesso = clienteService.cadastrarCliente(cliente);
+            boolean sucesso = clienteService.cadastrarCliente(cpf, email, senha);
             if (sucesso) {
-                return Response.status(Response.Status.CREATED).entity(cliente).build();
+                return Response.status(Response.Status.CREATED).entity("Cliente cadastrado com sucesso").build();
             } else {
                 return Response.status(Response.Status.CONFLICT).entity("Cliente já cadastrado").build();
             }
@@ -35,18 +38,21 @@ public class ClienteController {
     @Path("/login")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response realizarLogin(@FormParam("email") String email, @FormParam("senha") String senha){
+    public Response realizarLogin(
+            @FormParam("email") String email,
+            @FormParam("senha") String senha) {
         try {
-            boolean sucesso = clienteService.realizarLogin(email,senha);
+            boolean sucesso = clienteService.realizarLogin(email, senha);
             if (sucesso) {
                 return Response.ok("Login realizado com sucesso").build();
             } else {
                 return Response.status(Response.Status.UNAUTHORIZED).entity("Credenciais inválidas").build();
             }
         } catch (Exception e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao realizar login" + e.getMessage()).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao realizar login: " + e.getMessage()).build();
         }
     }
+
 
     // Endpoint para alterar o email
     @PUT
@@ -55,16 +61,19 @@ public class ClienteController {
     @Produces(MediaType.APPLICATION_JSON)
     public Response alterarEmail(
             @FormParam("cpf") String cpf,
-            @FormParam("novoEmail") String novoEmail
-    ) {
+            @FormParam("novoEmail") String novoEmail) {
         try {
-            Cliente cliente = new Cliente(cpf, novoEmail, null);
-            boolean sucesso = clienteService.alterarEmail(cliente, novoEmail);
+            Cliente cliente = clienteService.buscarClientePorCpf(cpf);
 
+            if (cliente == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("Cliente não encontrado.").build();
+            }
+
+            boolean sucesso = clienteService.alterarEmail(cliente, novoEmail);
             if (sucesso) {
                 return Response.ok("Email alterado com sucesso").build();
             } else {
-                return Response.status(Response.Status.BAD_REQUEST).entity("Erro ao alterar o email").build();
+                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Erro ao alterar o email").build();
             }
         } catch (IllegalArgumentException e) {
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();

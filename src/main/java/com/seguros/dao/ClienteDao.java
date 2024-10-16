@@ -32,4 +32,9 @@ public class ClienteDao {
 
         return OperacoesSql.executarUpdate(TABELA, colunasAtualizar, valoresAtualizar, condicao, parametrosCondicao);
     }
+
+    //Buscar um cliente pelo CPF
+    public Cliente buscarPorCpf(String cpf) {
+        return OperacoesSql.buscarClientePorCpf(cpf);
+    }
 }

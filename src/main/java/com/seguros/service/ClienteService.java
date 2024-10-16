@@ -1,6 +1,7 @@
 package com.seguros.service;
 
 import com.seguros.dao.ClienteDao;
+import com.seguros.factory.ClienteFactory;
 import com.seguros.model.Cliente;
 
 public class ClienteService {
@@ -9,7 +10,9 @@ public class ClienteService {
     //Métodos
 
     //Cadastrar um cliente com validações
-    public boolean cadastrarCliente(Cliente cliente) {
+    public boolean cadastrarCliente(String cpf, String email, String senha) {
+        ClienteFactory clienteFactory = new ClienteFactory(cpf, email, senha);
+        Cliente cliente = clienteFactory.criar();
 
         //Validar a senha
         if (!cliente.validarSenha()) {
@@ -34,6 +37,12 @@ public class ClienteService {
     //Realizar login
     public boolean realizarLogin(String email, String senha) {
         return clienteDao.verificarLogin(email, senha);
+    }
+
+
+    //Buscar o cliente pelo CPF (chave primária)
+    public Cliente buscarClientePorCpf(String cpf) {
+        return clienteDao.buscarPorCpf(cpf);
     }
 
 
