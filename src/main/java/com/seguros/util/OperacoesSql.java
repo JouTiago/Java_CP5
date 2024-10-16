@@ -76,7 +76,7 @@ public class OperacoesSql {
 
     //Verificar se login é válido no banco de dados
     public static boolean verificaLogin(String nomeTabela, String email, String senha) {
-        String sql = "SELECT * FROM " + nomeTabela + " WHERE c_email = ? AND senha = ?";
+        String sql = "SELECT * FROM " + nomeTabela + " WHERE c_email = ? AND c_senha = ?";
         boolean loginValido = false;
 
         try (Connection connection = DatabaseConfig.getConnection();
@@ -213,4 +213,46 @@ public class OperacoesSql {
         return null;
     }
 
+
+    //Ver se o cliente já existe pelo CPF
+    public static boolean clienteExiste(String tabela, String cpf) {
+        String sql = "SELECT COUNT(*) AS total FROM " + tabela + " WHERE c_cpf = ?";
+        try (Connection connection = DatabaseConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, cpf);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+                    return resultSet.getInt("total") > 0;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao verificar existência do cliente: " + e.getMessage());
+        }
+        return false;
+    }
+
+
+    //Deletar uma entrada do banco
+    public static boolean executarDelete(String tabela, String condicao, Object[] parametrosCondicao) {
+        String sqlDelete = "DELETE FROM " + tabela + " WHERE " + condicao;
+
+        try (Connection connection = DatabaseConfig.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(sqlDelete)) {
+
+            for (int i = 0; i < parametrosCondicao.length; i++) {
+                preparedStatement.setObject(i + 1, parametrosCondicao[i]);
+            }
+
+            int linhasAfetadas = preparedStatement.executeUpdate();
+            return linhasAfetadas > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erro ao remover entrada" + tabela + ": " + e.getMessage());
+            return false;
+        }
+    }
 }

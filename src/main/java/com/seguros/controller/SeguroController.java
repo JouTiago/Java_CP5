@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 @Path("/seguro")
 public class SeguroController {
-    private final SeguroService seguroAutoService = new SeguroService();
+    private final SeguroService seguroAutoService = SeguroService.getInstance();
 
 
     // Endpoint para contratar um seguro

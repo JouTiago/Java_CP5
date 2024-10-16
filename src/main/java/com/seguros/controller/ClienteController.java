@@ -2,13 +2,23 @@ package com.seguros.controller;
 
 import com.seguros.model.Cliente;
 import com.seguros.service.ClienteService;
+import com.seguros.dao.ClienteDao;
+import com.seguros.dao.ClienteDaoInterface;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("/cliente")
 public class ClienteController {
-    private final ClienteService clienteService = new ClienteService();
+    private final ClienteService clienteService;
+
+
+    //Construtores
+    public ClienteController() {
+        ClienteDaoInterface clienteDao = new ClienteDao();
+        this.clienteService = new ClienteService(clienteDao);
+    }
 
 
     //Endpoint para fazer o cadastro

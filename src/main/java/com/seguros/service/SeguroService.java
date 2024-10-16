@@ -12,12 +12,29 @@ import com.seguros.util.OperacoesSql;
 import java.time.LocalDate;
 import java.util.List;
 
+// Implementação de Singleton
+
 public class SeguroService {
+    private static SeguroService instancia;
     private final SeguroDao seguroDao = new SeguroDao();
     private final SinistroDao sinistroDao = new SinistroDao();
 
 
+    //Construtores
+
+    private SeguroService() { }
+
+
     //Métodos
+
+    //Retornar a única instância da classe
+    public static synchronized SeguroService getInstance() {
+        if (instancia == null) {
+            instancia = new SeguroService();
+        }
+        return instancia;
+    }
+
 
     //Contratar o seguro
     public boolean contratarSeguroAuto(Cliente cliente, Veiculo veiculo, LocalDate dataInicio, LocalDate dataFim) {

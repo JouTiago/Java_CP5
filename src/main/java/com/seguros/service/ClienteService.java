@@ -1,11 +1,18 @@
 package com.seguros.service;
 
-import com.seguros.dao.ClienteDao;
-import com.seguros.model.Cliente;
+import com.seguros.dao.ClienteDaoInterface;
 import com.seguros.factory.ClienteFactory;
+import com.seguros.model.Cliente;
 
 public class ClienteService {
-    private final ClienteDao clienteDao = new ClienteDao();
+    private final ClienteDaoInterface clienteDao;
+
+
+    //Construtores
+    public ClienteService(ClienteDaoInterface clienteDao) {
+        this.clienteDao = clienteDao;
+    }
+
 
     //Métodos
 
