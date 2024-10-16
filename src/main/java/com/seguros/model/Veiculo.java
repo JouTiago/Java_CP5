@@ -11,6 +11,7 @@ public class Veiculo {
     private String modelo;
     private int ano;
     private Cliente cliente;
+    LocalDate hoje = LocalDate.now();
 
 
     //Construtores
@@ -96,12 +97,18 @@ public class Veiculo {
             return false;
         };
 
-        LocalDate hoje = LocalDate.now();
+        return this.cnhDataEmissao != null && Period.between(this.cnhDataEmissao, hoje).getYears() <= 30;
+    }
 
-        if (this.cnhDataEmissao == null || Period.between(this.cnhDataEmissao, hoje).getYears() > 30) {
-            return false;
-        }
 
-        return true;
+    //Validar ano do carro
+    public boolean validarAno() {
+        return this.ano <= hoje.getYear() && this.ano > (hoje.getYear() - 50);
+    }
+
+
+    // Calcular a idade do carro
+    public int calularIdadeVeiculo() {
+        return hoje.getYear() - this.ano;
     }
 }
